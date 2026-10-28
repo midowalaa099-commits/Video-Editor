@@ -52,4 +52,8 @@ VIDEO_CUTTER_NATIVE_TESTS=1 npm test
 
 Browser smoke tests should also verify a real WebAssembly export with and without audio, cancellation/retry and responsive Arabic controls. Test media is kept outside the repository.
 
+Use the header switch to choose Arabic or English; the site remembers the choice.
+
 See `THIRD_PARTY_NOTICES.md` for the export engine licenses and corresponding source links.
+
+The deployed license copy is available at `/licenses/GPL-2.0.txt`.

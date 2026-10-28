@@ -1,0 +1,4 @@
+Video Editer includes @ffmpeg/ffmpeg 0.12.15 (MIT) and @ffmpeg/core 0.12.10 (GPL-2.0-or-later).
+GPLv2 text: GPL-2.0.txt
+Corresponding upstream source and build scripts: https://github.com/ffmpegwasm/ffmpeg.wasm
+Pinned dependencies and source notices: https://github.com/midowalaa099-commits/Video-Editor
