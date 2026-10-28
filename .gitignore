@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.vercel/
+public/ffmpeg/
+.env
+.env.*
+.DS_Store
+*.mp4
+*.mov
+*.webm
+*.wav
+*.f32
+*.log

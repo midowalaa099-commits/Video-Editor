@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#101318" />
+  <meta name="description" content="قص الفيديو بنفسك من المتصفح، واحفظ نسخة جديدة. الفيديو بيفضل على جهازك." />
+  <title>Video Editer — قص الفيديو بنفسك</title>
+  <link rel="stylesheet" href="/src/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand" dir="ltr"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M11 5H5v22h6M21 5h6v22h-6M12 11l9 5-9 5Z"/></svg><span>Video Editer</span></div>
+    <div class="header-actions"><span class="privacy-pill"><span aria-hidden="true">●</span> قص وتصدير على جهازك</span><button id="languageToggle" class="button quiet small language-toggle" type="button" lang="en" aria-label="Switch language to English">English</button></div>
+  </header>
+  <main class="workspace">
+    <section class="editor-main" aria-label="الفيديو وأدوات القص">
+      <div class="page-heading"><div><p class="eyebrow">إنت اللي تختار كل لقطة</p><h1>قص الفيديو على مزاجك.</h1><p class="subtitle">علّم البداية والنهاية، شيل الجزء، واحفظ نسخة جديدة.</p></div><button id="changeVideo" class="button quiet small hidden" type="button">غيّر الفيديو</button></div>
+      <div class="player-panel">
+        <div class="viewer" id="dropZone">
+          <video id="video" controls preload="metadata" playsinline aria-label="معاينة الفيديو" class="hidden"></video>
+          <div class="empty-player" id="emptyPlayer">
+            <div class="upload-symbol" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 30V10m-8 8 8-8 8 8M10 29v8a3 3 0 0 0 3 3h22a3 3 0 0 0 3-3v-8"/></svg></div>
+            <h2>ابدأ بالفيديو بتاعك</h2><p>اسحبه هنا أو اختاره من جهازك.</p>
+            <button class="button primary" id="chooseVideo" type="button">اختار فيديو</button>
+            <span class="format-note" dir="auto">MP4، MOV، WebM وأي فيديو يقدر المتصفح يشغّله<br />أقصى حجم: 500 ميجابايت (MiB)</span>
+          </div>
+          <div class="drop-overlay hidden" id="dropOverlay" aria-hidden="true">سيب الفيديو هنا</div>
+          <input id="fileInput" type="file" accept="video/*,.mp4,.mov,.webm" aria-label="اختار ملف فيديو" hidden />
+        </div>
+        <div class="video-name-row hidden" id="videoNameRow"><span id="videoName" dir="auto"></span><span class="file-size" id="fileSize" dir="ltr"></span></div>
+        <div class="editor-controls" id="editorControls">
+          <div class="transport-row">
+            <div class="transport" dir="ltr"><button class="button small" id="backFive" type="button" title="ارجع 5 ثواني" disabled>−5 ث</button><button class="button small" id="backFrame" type="button" title="الفريم اللي قبله — السهم الشمال" disabled>← فريم</button><button class="button small" id="nextFrame" type="button" title="الفريم اللي بعده — السهم اليمين" disabled>فريم →</button><button class="button small" id="nextFive" type="button" title="اتقدم 5 ثواني" disabled>+5 ث</button></div>
+            <span class="clock" dir="ltr"><strong id="currentTime">00:00:00.000</strong><span> / </span><span id="totalTime">—</span></span>
+          </div>
+          <div id="timeline" class="timeline" role="slider" tabindex="0" aria-label="مكان التشغيل في الفيديو" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0" aria-disabled="true" dir="ltr"><div id="selectionBand" class="selection-band hidden"></div><div id="cutBands"></div><div class="playhead" id="playhead"></div></div>
+          <div class="timeline-labels"><span>الأحمر: الأجزاء اللي هتتشال</span><span>الأوقات على الفيديو اللي اخترته</span></div>
+          <div class="preview-row"><label class="checkbox-label"><input id="skipCuts" type="checkbox" checked />عدّي الأجزاء المحذوفة أثناء المعاينة</label><button id="jumpStart" class="button quiet small" type="button" disabled>ارجع للأول</button></div>
+          <div class="mark-section"><h2>علّم الجزء اللي عايز تشيله</h2><div class="mark-grid">
+            <div class="mark-field"><div class="mark-field-top"><label for="startInput">البداية</label><button id="markStart" class="button small" type="button" disabled>علّم البداية <kbd>I</kbd></button></div><input id="startInput" type="text" value="00:00:00.000" dir="ltr" inputmode="decimal" autocomplete="off" spellcheck="false" aria-label="وقت بداية الجزء اللي هيتشال" disabled /></div>
+            <div class="mark-field"><div class="mark-field-top"><label for="endInput">النهاية</label><button id="markEnd" class="button small" type="button" disabled>علّم النهاية <kbd>O</kbd></button></div><input id="endInput" type="text" value="00:00:00.000" dir="ltr" inputmode="decimal" autocomplete="off" spellcheck="false" aria-label="وقت نهاية الجزء اللي هيتشال" disabled /></div>
+          </div><div class="remove-row"><span id="selectionDuration">اختار فيديو، وبعدها علّم البداية والنهاية.</span><button id="removeSelection" class="button danger" type="button" disabled>شيل الجزء المحدد</button></div></div>
+          <div class="notice hidden" id="notice" role="alert"></div>
+          <p class="keyboard-hint"><kbd>Space</kbd> تشغيل/إيقاف <span>·</span> <kbd>I</kbd> بداية <span>·</span> <kbd>O</kbd> نهاية <span>·</span> <kbd>←</kbd> <kbd>→</kbd> فريم <span>·</span> <kbd>Delete</kbd> حذف</p>
+        </div>
+      </div>
+      <p class="privacy-note"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 9V6a5 5 0 0 1 10 0v3M4 9h12v9H4Z"/></svg>الفيديو بيفضل على جهازك؛ القص والتصدير جوه المتصفح.</p>
+    </section>
+    <aside class="cut-sidebar" aria-label="الأجزاء المحذوفة وحفظ الفيديو">
+      <div class="sidebar-heading"><h2>الأجزاء اللي هتتشال</h2><span id="cutCount" class="count-badge">0</span></div>
+      <div id="cutList" class="cut-list"><div class="empty-cuts"><div aria-hidden="true">✂</div><strong>لسه مفيش قصّات</strong><p>كل جزء تشيله هيظهر هنا.<br />تقدر ترجّعه في أي وقت.</p></div></div>
+      <div class="list-actions"><button id="undo" class="button quiet small" type="button" disabled>↶ تراجع</button><button id="clearCuts" class="button quiet small" type="button" disabled>رجّع الكل</button></div>
+      <div class="export-section"><div class="duration-stat"><span>مدة الفيديو</span><strong id="originalDuration" dir="ltr">—</strong></div><div class="duration-stat"><span>اللي هيتشال</span><strong id="removedDuration" dir="ltr">0:00</strong></div><div class="duration-stat final-duration"><span>بعد القص</span><strong id="remainingDuration" dir="ltr">—</strong></div>
+        <button id="exportVideo" class="button primary export-button" type="button" disabled>احفظ الفيديو الجديد</button>
+        <p class="save-state" id="saveState" role="status">اختار فيديو عشان تبدأ.</p>
+        <div id="exportPanel" class="export-panel hidden" aria-live="polite"><div class="progress-top"><span id="exportMessage"></span><span id="exportPercent" dir="ltr"></span></div><progress id="exportProgress" max="1" value="0" aria-label="تقدم تصدير الفيديو"></progress><button id="cancelExport" class="button quiet small" type="button">إلغاء التصدير</button><a id="downloadVideo" class="button download hidden" download>نزّل الفيديو الجديد</a></div>
+        <p class="local-note">ملفك الأصلي هيفضل زي ما هو. بنحفظ مواعيد القص بس في المتصفح؛ لو رجعت للموقع، اختار نفس الفيديو عشان ترجع قصّاتك.</p>
+        <p class="engine-note">أول تصدير بيحمّل أدوات القص (حوالي 32 ميجابايت).</p>
+      </div>
+    </aside>
+  </main>
+  <footer>Video Editer <span>·</span> كل لقطة بإيدك.</footer>
+  <script type="module" src="/src/app.js"></script>
+</body>
+</html>
